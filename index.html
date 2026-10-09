@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
+<title>SG HEMARI Strafenkasse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: navy Vereinskopf mit Wappen, Kassenstand-Leiste, darunter Tabs (Kader / Katalog / Verlauf); Kader-Zeilen klappen zur Eintragsfläche auf */
+:root{
+  --navy:#1c2752; --navy-2:#2a3770; --red:#c41f3a; --red-soft:#fbe6ea;
+  --bg:#f3f4f8; --card:#ffffff; --fg:#151a2e; --muted:#5d6480; --line:#dfe2ec;
+  --ok:#1f7a4d; --ok-soft:#e1f3ea; --chip:#eef0f7; --head-fg:#ffffff;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --navy:#141c3d; --navy-2:#222d5e; --red:#ef5470; --red-soft:#3a1823;
+  --bg:#0d1122; --card:#161b33; --fg:#e8eaf4; --muted:#9aa1bf; --line:#2a3152;
+  --ok:#4fc58a; --ok-soft:#14301f; --chip:#20274a; --head-fg:#ffffff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --navy:#141c3d; --navy-2:#222d5e; --red:#ef5470; --red-soft:#3a1823;
+  --bg:#0d1122; --card:#161b33; --fg:#e8eaf4; --muted:#9aa1bf; --line:#2a3152;
+  --ok:#4fc58a; --ok-soft:#14301f; --chip:#20274a; --head-fg:#ffffff; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+img{max-width:100%}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px}
+header.club{background:linear-gradient(115deg,var(--navy) 0%,var(--navy) 55%,var(--navy-2) 100%);color:var(--head-fg);position:relative;overflow:hidden}
+header.club::after{content:"";position:absolute;right:-60px;top:0;bottom:0;width:180px;background:var(--red);transform:skewX(-18deg);opacity:.9}
+.club-in{display:flex;align-items:center;gap:16px;padding-block:20px;position:relative;z-index:1}
+.crest{width:76px;height:76px;border-radius:50%;flex:none;background:#f7f3ea;box-shadow:0 0 0 3px rgba(255,255,255,.2)}
+.club h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,6vw,40px);line-height:1;margin:0;letter-spacing:.01em;text-transform:uppercase;text-wrap:balance}
+.club p{margin:4px 0 0;font-size:13px;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+.stats{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:-1px;margin-block:18px}
+.stat{background:var(--card);padding:12px 14px;min-width:0}
+.stat .k{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.stat .v{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat.total .v{color:var(--red)} .stat.top .v{font-size:22px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .stat .sub{font-size:13px;color:var(--red);font-weight:700;font-variant-numeric:tabular-nums}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:14px}
+.tab{background:none;border:0;padding:10px 14px;font-family:var(--display);font-weight:700;font-size:18px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px}
+.tab[aria-selected="true"]{color:var(--fg);border-color:var(--red)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.toolbar input[type=search]{flex:1 1 200px;min-width:0}
+input[type=search],input[type=text],input[type=number],input[type=date],select{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:none;padding:8px 12px;font-size:13px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--navy);color:#fff}
+.list{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.row{border-top:1px solid var(--line)} .row:first-child{border-top:0}
+.row-btn{width:100%;display:flex;align-items:center;gap:12px;padding:10px 14px;background:none;border:0;text-align:left}
+.row-btn:hover{background:var(--chip)}
+.av{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:16px;background:var(--chip);color:var(--fg)}
+.av.debt{background:var(--red);color:#fff}
+.nm{flex:1;min-width:0}
+.nm b{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nm small{color:var(--muted);font-size:12.5px}
+.amt{font-family:var(--display);font-weight:700;font-size:22px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.amt.zero{color:var(--muted);opacity:.6} .amt.due{color:var(--red)}
+.rank{width:22px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;font-size:13px;flex:none}
+.drawer{padding:4px 14px 16px 14px;background:var(--bg);border-top:1px dashed var(--line)}
+.drawer h3{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:14px;color:var(--muted);margin:12px 0 8px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.pen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.pen{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 11px;background:var(--card);border:1px solid var(--line);border-radius:8px;text-align:left;font-size:14px}
+.pen:hover{border-color:var(--red)}
+.pen .p{font-family:var(--display);font-weight:700;font-size:18px;color:var(--red);white-space:nowrap}
+.fines{display:flex;flex-direction:column;gap:6px}
+.fine{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;flex-wrap:wrap}
+.fine .t{flex:1 1 160px;min-width:0}
+.fine .t small{display:block;color:var(--muted);font-size:12px}
+.fine .e{font-weight:700;font-variant-numeric:tabular-nums}
+.pill{border:0;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.pill.open{background:var(--red-soft);color:var(--red)} .pill.paid{background:var(--ok-soft);color:var(--ok)}
+.x{background:none;border:0;color:var(--muted);font-size:18px;line-height:1;padding:4px 6px;border-radius:6px}
+.x:hover{color:var(--red);background:var(--red-soft)}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:7px 12px;font-weight:600;font-size:13.5px}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.danger{background:var(--red);border-color:var(--red);color:#fff}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.empty{padding:28px 16px;text-align:center;color:var(--muted)}
+table.cat{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+table.cat td,table.cat th{padding:10px 12px;border-top:1px solid var(--line);text-align:left;vertical-align:middle}
+table.cat th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-top:0}
+table.cat td.n{color:var(--muted);font-variant-numeric:tabular-nums;width:2.5em}
+table.cat td.p{font-family:var(--display);font-weight:700;font-size:19px;color:var(--red);white-space:nowrap;width:6em}
+table.cat input[type=text]{width:100%} table.cat input[type=number]{width:5em}
+.tablewrap{overflow-x:auto}
+.addrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.addrow input[type=text]{flex:1 1 200px;min-width:0}
+.hist-day{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-size:14px;margin:14px 0 6px}
+.note{font-size:12.5px;color:var(--muted);margin:14px 0 30px}
+.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 14px;border-radius:10px;display:flex;gap:12px;align-items:center;box-shadow:0 6px 24px rgba(0,0,0,.25);max-width:calc(100% - 32px);z-index:5;font-size:14px}
+.toast button{background:none;border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:6px;padding:4px 8px;font-weight:600}
+.banner{background:var(--red-soft);color:var(--red);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:14px}
+.login{display:flex;justify-content:flex-end;margin:-6px 0 12px}.login-form{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13.5px;color:var(--muted)}.login-form input{width:9em}
+.confirm{display:inline-flex;gap:6px;align-items:center;font-size:13px}
+@media (max-width:520px){
+  .stats{grid-template-columns:1fr 1fr}.stat.top{grid-column:1/-1}
+  .crest{width:60px;height:60px} header.club::after{width:90px;right:-50px}
+  .tab{font-size:16px;padding:10px}
+}
+@media (prefers-reduced-motion:no-preference){.drawer{animation:dr .18s ease-out}@keyframes dr{from{opacity:0;transform:translateY(-4px)}}}
+</style>
+<link rel="icon" href="logo.png">
+</head><body>
+<header class="club"><div class="wrap club-in">
+  <img class="crest" src="logo.png" alt="Wappen SG HEMARI">
+  <div><h1>Strafenkasse B-Jugend</h1><p>SG Hecklingen · Riegel · Malterdingen</p></div>
+</div></header>
+<main class="wrap">
+  <section class="stats" aria-label="Kassenstand">
+    <div class="stat total"><div class="k">In der Kasse</div><div class="v" id="s-total">–</div></div>
+    <div class="stat top"><div class="k">Zahlt am meisten</div><div class="v" id="s-top">–</div><div class="sub" id="s-top-amt"></div></div>
+    <div class="stat"><div class="k">Strafen</div><div class="v" id="s-count">–</div></div>
+  </section>
+  <div class="login">
+    <button class="btn" id="login-open">Kassenwart-Login</button>
+    <span id="login-form" class="login-form" hidden><input type="password" id="pin" placeholder="PIN" aria-label="Kassenwart-PIN" autocomplete="current-password"><button class="btn primary" id="login-go">Anmelden</button></span>
+    <span id="login-state" class="login-form" hidden>Als Kassenwart angemeldet <button class="btn" id="logout">Abmelden</button></span>
+  </div>
+  <div id="banner" class="banner" hidden></div>
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-kader" aria-selected="true">Kader</button>
+    <button class="tab" role="tab" id="tab-katalog" aria-selected="false">Katalog</button>
+    <button class="tab" role="tab" id="tab-verlauf" aria-selected="false">Verlauf</button>
+  </nav>
+
+  <section id="v-kader">
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="Spieler suchen" aria-label="Spieler suchen">
+      <div class="seg" role="group" aria-label="Sortierung">
+        <button id="sort-debt" aria-pressed="true">Meiste offen</button>
+        <button id="sort-name" aria-pressed="false">A–Z</button>
+      </div>
+    </div>
+    <div class="list" id="kader"><div class="empty">Kader wird geladen …</div></div>
+    <div class="addrow w-only" hidden>
+      <input type="text" id="new-player" placeholder="Neuen Spieler hinzufügen (Vor- und Nachname)" aria-label="Neuer Spieler">
+      <button class="btn primary" id="add-player">Hinzufügen</button>
+    </div>
+  </section>
+
+  <section id="v-katalog" hidden>
+    <div class="tablewrap"><table class="cat"><thead><tr><th>Nr.</th><th>Vergehen</th><th>Strafe</th><th class="w-only" hidden></th></tr></thead><tbody id="katalog"></tbody></table></div>
+    <div class="addrow w-only" hidden>
+      <input type="text" id="new-pen" placeholder="Neues Vergehen" aria-label="Neues Vergehen">
+      <input type="number" id="new-pen-amt" min="0" step="0.5" placeholder="€" aria-label="Betrag in Euro" style="width:6em">
+      <button class="btn primary" id="add-pen">Hinzufügen</button>
+    </div>
+    <p class="note">Änderungen am Katalog gelten nur für neue Einträge. Bereits eingetragene Strafen behalten ihren Betrag.</p>
+  </section>
+
+  <section id="v-verlauf" hidden>
+    <div id="verlauf"></div>
+  </section>
+  <p class="note" id="hint"></p>
+</main>
+<div class="toast" id="toast" hidden><span id="toast-msg"></span><button id="toast-undo">Rückgängig</button></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+// === Verbindung zu Supabase (Project URL + anon public key) ===
+const SUPABASE_URL="__SB_URL__";
+const SUPABASE_KEY="__SB_KEY__";
+
+const S={players:new Map(),catalog:new Map(),fines:[],open:null,sort:"debt",q:"",canWrite:false,confirm:null,loaded:false};
+let sb=null,pin=null;
+const $=id=>document.getElementById(id);
+const eur=n=>(Math.round(n*100)/100).toLocaleString("de-DE",{minimumFractionDigits:Number.isInteger(n)?0:2,maximumFractionDigits:2})+" €";
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const initials=n=>n.replace(/\./g,"").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const fmtDay=d=>{try{return new Date(d+"T12:00:00").toLocaleDateString("de-DE",{weekday:"short",day:"2-digit",month:"2-digit",year:"numeric"})}catch(e){return d}};
+let dateSel=today();
+
+function sumFor(pid){let total=0,n=0;for(const f of S.fines){if(f.playerId!==pid)continue;n++;total+=f.amount}return{total,n}}
+function sortedCatalog(){return [...S.catalog.values()].sort((a,b)=>(a.nr??99)-(b.nr??99))}
+function showBanner(t){const b=$("banner");b.textContent=t;b.hidden=!t}
+let toastT=null,undoFn=null;
+function toast(msg,undo){$("toast-msg").textContent=msg;undoFn=undo||null;$("toast-undo").hidden=!undo;$("toast").hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{$("toast").hidden=true;undoFn=null},5000)}
+$("toast-undo").onclick=async()=>{const f=undoFn;$("toast").hidden=true;undoFn=null;if(f)await f()};
+
+async function rpc(fn,args,okMsg){
+  if(!sb||!pin)return null;
+  const {data,error}=await sb.rpc(fn,{p:pin,...args});
+  if(error){
+    if(/PIN/i.test(error.message)){logout();showBanner("PIN stimmt nicht mehr. Bitte neu anmelden.")}
+    else showBanner("Speichern hat nicht geklappt: "+error.message);
+    return null}
+  showBanner("");if(okMsg)toast(okMsg);await load();return data??true;
+}
+
+async function load(){
+  if(!sb)return;
+  const [p,c,f]=await Promise.all([
+    sb.from("players").select("id,name"),
+    sb.from("catalog").select("id,nr,title,amount"),
+    sb.from("fines").select("id,player_id,player_name,title,amount,day,created_at")]);
+  const err=p.error||c.error||f.error;
+  if(err){showBanner("Daten konnten nicht geladen werden. Seite neu laden.");return}
+  S.players=new Map(p.data.map(x=>[x.id,x]));
+  S.catalog=new Map(c.data.map(x=>[x.id,{...x,amount:Number(x.amount)}]));
+  S.fines=f.data.map(x=>({id:x.id,playerId:x.player_id,playerName:x.player_name,title:x.title,amount:Number(x.amount),day:x.day,at:x.created_at}));
+  S.loaded=true;render();
+}
+
+function renderStats(){
+  let t=0;for(const f of S.fines)t+=f.amount;$("s-total").textContent=eur(t);$("s-count").textContent=S.fines.length;
+  const sums=[...S.players.values()].map(p=>({name:p.name,...sumFor(p.id)})).filter(p=>p.total>0);
+  const max=Math.max(0,...sums.map(p=>p.total));
+  if(!max){$("s-top").textContent="Noch keiner";$("s-top-amt").textContent="";return}
+  const top=sums.filter(p=>p.total===max).map(p=>p.name);
+  $("s-top").textContent=top.length>2?top.length+" Spieler gleichauf":top.join(" & ");$("s-top").title=top.join(", ");
+  $("s-top-amt").textContent=eur(max)}
+
+function renderKader(){
+  const el=$("kader");if(!S.loaded)return;
+  let ps=[...S.players.values()].map(p=>({...p,...sumFor(p.id)}));
+  if(!ps.length){el.innerHTML='<div class="empty">Noch kein Spieler im Kader.</div>';return}
+  if(S.q){const q=S.q.toLowerCase();ps=ps.filter(p=>p.name.toLowerCase().includes(q))}
+  ps.sort(S.sort==="name"?(a,b)=>a.name.localeCompare(b.name,"de"):(a,b)=>b.total-a.total||a.name.localeCompare(b.name,"de"));
+  if(!ps.length){el.innerHTML='<div class="empty">Kein Spieler passt zur Suche.</div>';return}
+  el.innerHTML=ps.map((p,i)=>{
+    const sub=p.n?`${p.n} ${p.n===1?"Strafe":"Strafen"}`:"Weiße Weste";
+    return `<div class="row"><button class="row-btn" data-p="${esc(p.id)}" aria-expanded="${S.open===p.id}">
+      ${S.sort==="debt"&&!S.q?`<span class="rank">${i+1}</span>`:""}
+      <span class="av ${p.total>0?"debt":""}">${esc(initials(p.name))}</span>
+      <span class="nm"><b>${esc(p.name)}</b><small>${sub}</small></span>
+      <span class="amt ${p.total>0?"due":"zero"}">${eur(p.total)}</span></button>
+      ${S.open===p.id?drawer(p):""}</div>`}).join("");
+}
+
+function drawer(p){
+  const fines=S.fines.filter(f=>f.playerId===p.id).sort((a,b)=>(b.day+b.at).localeCompare(a.day+a.at));
+  const cat=sortedCatalog();const w=S.canWrite;let h="";
+  if(w){
+    h+=`<h3><span>Strafe eintragen</span><label style="display:flex;gap:6px;align-items:center;text-transform:none;letter-spacing:0;font-family:var(--body);font-size:13px">Datum <input type="date" id="date-sel" value="${esc(dateSel)}"></label></h3>`;
+    h+=cat.length?`<div class="pen-grid">${cat.map(c=>`<button class="pen" data-add="${esc(c.id)}" data-pl="${esc(p.id)}"><span>${esc(c.title)}</span><span class="p">${eur(c.amount)}</span></button>`).join("")}</div>`:'<div class="empty">Der Strafenkatalog ist leer.</div>';
+  }
+  h+=`<h3><span>Strafen von ${esc(p.name.split(" ")[0])}</span><span>${eur(fines.reduce((s,f)=>s+f.amount,0))}</span></h3>`;
+  h+=fines.length?`<div class="fines">${fines.map(f=>fineRow(f)).join("")}</div>`:'<div class="empty" style="padding:12px">Noch keine Strafe. Weiter so.</div>';
+  if(w){h+=`<h3><span></span>${S.confirm==="pl:"+p.id?`<span class="confirm">${esc(p.name)} wirklich aus dem Kader entfernen?${fines.length?" Seine Strafen bleiben im Verlauf.":""} <button class="btn danger" data-delpl="${esc(p.id)}">Entfernen</button><button class="btn" data-cancel>Abbrechen</button></span>`:`<button class="btn" data-askpl="${esc(p.id)}">Aus Kader entfernen</button>`}</h3>`}
+  return `<div class="drawer">${h}</div>`;
+}
+
+function fineRow(f,withName){
+  const w=S.canWrite;const pn=withName?(S.players.get(f.playerId)?.name||f.playerName||"Ehemaliger Spieler"):"";
+  const conf=S.confirm==="f:"+f.id;
+  return `<div class="fine"><span class="t">${withName?`<b>${esc(pn)}</b> · `:""}${esc(f.title)}<small>${esc(fmtDay(f.day))}</small></span>
+    <span class="e">${eur(f.amount)}</span>
+    ${w?(conf?`<span class="confirm"><button class="btn danger" data-delf="${esc(f.id)}">Löschen</button><button class="btn" data-cancel>Nein</button></span>`:`<button class="x" data-askf="${esc(f.id)}" aria-label="Strafe löschen">×</button>`):""}</div>`;
+}
+
+function renderKatalog(){
+  const tb=$("katalog");const cat=sortedCatalog();if(!S.loaded)return;
+  if(!cat.length){tb.innerHTML='<tr><td colspan="4" class="empty">Noch keine Vergehen im Katalog.</td></tr>';return}
+  const w=S.canWrite;
+  tb.innerHTML=cat.map((c,i)=>`<tr><td class="n">${i+1}.</td>
+    <td>${w?`<input type="text" id="ct-${esc(c.id)}" data-ct="${esc(c.id)}" value="${esc(c.title)}" aria-label="Vergehen">`:esc(c.title)}</td>
+    <td class="p">${w?`<input type="number" id="ca-${esc(c.id)}" data-ca="${esc(c.id)}" value="${c.amount}" min="0" step="0.5" aria-label="Betrag"> €`:eur(c.amount)}</td>
+    ${w?`<td>${S.confirm==="c:"+c.id?`<span class="confirm"><button class="btn danger" data-delc="${esc(c.id)}">Löschen</button><button class="btn" data-cancel>Nein</button></span>`:`<button class="x" data-askc="${esc(c.id)}" aria-label="Vergehen löschen">×</button>`}</td>`:""}</tr>`).join("");
+}
+
+function renderVerlauf(){
+  const el=$("verlauf");if(!S.loaded)return;
+  const fs=S.fines.slice().sort((a,b)=>(b.day+b.at).localeCompare(a.day+a.at));
+  if(!fs.length){el.innerHTML='<div class="list"><div class="empty">Noch keine Strafen eingetragen.</div></div>';return}
+  let h="",day=null;
+  for(const f of fs){if(f.day!==day){if(day!==null)h+="</div>";day=f.day;h+=`<div class="hist-day">${esc(fmtDay(day))}</div><div class="fines">`}h+=fineRow(f,true)}
+  el.innerHTML=h+"</div>";
+}
+
+function applyWrite(){
+  document.querySelectorAll(".w-only").forEach(e=>e.hidden=!S.canWrite);
+  $("login-open").hidden=S.canWrite||!$("login-form").hidden;$("login-state").hidden=!S.canWrite;
+  $("hint").textContent=S.canWrite?"Tippe auf einen Spieler, um eine Strafe einzutragen. Bezahlt wird am Saisonende.":"Tippe auf einen Spieler, um seine Strafen zu sehen. Bezahlt wird am Saisonende."}
+function render(){
+  const a=document.activeElement;if(a&&a.matches&&a.matches("#katalog input"))return;
+  renderStats();renderKader();renderKatalog();renderVerlauf();applyWrite()}
+
+// Kassenwart-Login
+function logout(){pin=null;S.canWrite=false;try{localStorage.removeItem("pin")}catch(e){}render()}
+$("login-open").onclick=()=>{$("login-form").hidden=false;$("login-open").hidden=true;$("pin").focus()};
+$("login-go").onclick=async()=>{
+  const p=$("pin").value;if(!p||!sb)return;
+  const {data,error}=await sb.rpc("check_pin",{p});
+  if(error||!data){showBanner("PIN falsch. Nochmal versuchen.");return}
+  pin=p;S.canWrite=true;try{localStorage.setItem("pin",p)}catch(e){}
+  $("pin").value="";$("login-form").hidden=true;showBanner("");toast("Angemeldet. Du kannst jetzt eintragen.");render()};
+$("pin").onkeydown=e=>{if(e.key==="Enter")$("login-go").click()};
+$("logout").onclick=logout;
+
+// Tabs
+const views=["kader","katalog","verlauf"];
+function setTab(t){views.forEach(v=>{$("tab-"+v).setAttribute("aria-selected",v===t);$("v-"+v).hidden=v!==t});try{localStorage.setItem("tab",t)}catch(e){}}
+views.forEach(v=>$("tab-"+v).onclick=()=>setTab(v));
+try{const t=localStorage.getItem("tab");if(views.includes(t))setTab(t)}catch(e){}
+$("q").oninput=e=>{S.q=e.target.value.trim();renderKader()};
+$("sort-debt").onclick=()=>{S.sort="debt";$("sort-debt").setAttribute("aria-pressed",true);$("sort-name").setAttribute("aria-pressed",false);renderKader()};
+$("sort-name").onclick=()=>{S.sort="name";$("sort-name").setAttribute("aria-pressed",true);$("sort-debt").setAttribute("aria-pressed",false);renderKader()};
+
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.id==="date-sel"){dateSel=t.value||today()}
+  if(t.dataset.ct){const v=t.value.trim();const c=S.catalog.get(t.dataset.ct);if(v&&c&&v!==c.title){t.blur();rpc("save_catalog",{cid:c.id,t:v,a:c.amount},"Vergehen geändert")}}
+  if(t.dataset.ca){const v=parseFloat(t.value);const c=S.catalog.get(t.dataset.ca);if(c&&!isNaN(v)&&v>=0&&v!==c.amount){t.blur();rpc("save_catalog",{cid:c.id,t:c.title,a:v},"Betrag geändert")}}
+});
+
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("button");if(!b)return;const d=b.dataset;
+  if(d.p){S.open=S.open===d.p?null:d.p;S.confirm=null;renderKader();return}
+  if(d.cancel!==undefined){S.confirm=null;render();return}
+  if(d.askf){S.confirm="f:"+d.askf;render();return}
+  if(d.askpl){S.confirm="pl:"+d.askpl;render();return}
+  if(d.askc){S.confirm="c:"+d.askc;render();return}
+  if(d.add){
+    const c=S.catalog.get(d.add),p=S.players.get(d.pl);if(!c||!p)return;b.disabled=true;
+    const id=await rpc("add_fine",{pid:p.id,cid:c.id,d:dateSel||today()});b.disabled=false;
+    if(id)toast(`${eur(c.amount)} für ${p.name} eingetragen`,()=>rpc("delete_fine",{fid:id},"Eintrag entfernt"));
+    return}
+  if(d.delf){S.confirm=null;rpc("delete_fine",{fid:d.delf},"Strafe gelöscht");return}
+  if(d.delpl){S.confirm=null;S.open=null;rpc("delete_player",{pid:d.delpl},"Spieler entfernt");return}
+  if(d.delc){S.confirm=null;rpc("delete_catalog",{cid:d.delc},"Vergehen gelöscht");return}
+});
+
+$("add-player").onclick=async()=>{const n=$("new-player").value.trim().replace(/\s+/g," ");if(!n)return;
+  if(await rpc("add_player",{n},n+" ist jetzt im Kader"))$("new-player").value=""};
+$("new-player").onkeydown=e=>{if(e.key==="Enter")$("add-player").click()};
+$("add-pen").onclick=async()=>{const t=$("new-pen").value.trim(),a=parseFloat($("new-pen-amt").value);if(!t||isNaN(a)||a<0)return;
+  if(await rpc("save_catalog",{cid:null,t,a},"Vergehen hinzugefügt")){$("new-pen").value="";$("new-pen-amt").value=""}};
+
+render();
+(async()=>{
+  if(!window.supabase||SUPABASE_URL.startsWith("__")){showBanner("Keine Verbindung zur Datenbank.");$("kader").innerHTML='<div class="empty">Keine Verbindung zur Strafenkasse.</div>';return}
+  sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  try{const p=localStorage.getItem("pin");if(p){const {data}=await sb.rpc("check_pin",{p});if(data){pin=p;S.canWrite=true}else localStorage.removeItem("pin")}}catch(e){}
+  await load();
+  let t=null;const again=()=>{clearTimeout(t);t=setTimeout(load,300)};
+  sb.channel("kasse").on("postgres_changes",{event:"*",schema:"public"},again).subscribe();
+  setInterval(()=>{if(!document.hidden)load()},60000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)load()});
+})();
+</script>
+
+</body></html>
