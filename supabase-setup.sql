@@ -39,6 +39,7 @@ create policy "lesen" on public.fines   for select using (true);
 create schema private;
 revoke all on schema private from anon, authenticated;
 create table private.settings (pin_hash text not null);
+alter table private.settings enable row level security;
 insert into private.settings (pin_hash) values (extensions.crypt('HIER-DEIN-PIN', extensions.gen_salt('bf')));
 
 create function private.pin_ok(p text) returns boolean
